@@ -76,7 +76,8 @@ void master()
         MPI_Irecv(&tempCount,1,MPI_INT,MPI_ANY_SOURCE,ANSWER_TAG,MPI_COMM_WORLD,&request);
         MPI_Wait(&request,&status);
         int recvNode = status.MPI_SOURCE;
-        printf("Receive answer from node %d\nCount = %d\n",recvNode,tempCount);
+        if(DEBUG)
+            printf("Receive answer from node %d\nCount = %d\n",recvNode,tempCount);
         taskCount--;
         totalCount+=tempCount;
     }while(taskCount > 0);
@@ -86,7 +87,8 @@ void master()
 
 //slave nodes
 void slave(){
-    printf("Hello from slave node: %d\n",myrank);
+    if(DEBUG)
+        printf("Hello from slave node: %d\n",myrank);
     MPI_Request request;
     MPI_Status status;
     double mytask[3];
