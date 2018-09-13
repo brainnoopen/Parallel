@@ -7,7 +7,7 @@
 #define TASK_TAG 101
 #define FINISH_TAG 103 //indicate that there are no more task
 #define ANSWER_TAG 102
-#define DEBUG 1
+#define DEBUG 0
 //Global variables
 int worldsize; //number of nodes
 int myrank; //rank of this node
@@ -72,7 +72,7 @@ void master()
         if(finished == taskCount){
             //broadcast the finish signal to all nodes
             for(int rank = 1; rank < worldsize; rank++){
-                double finish[3];
+                double finish[3]; //random values
                 MPI_Isend(&finish,3,MPI_DOUBLE,rank,FINISH_TAG,MPI_COMM_WORLD,&request);
                 MPI_Wait(&request,&status);
             } 
