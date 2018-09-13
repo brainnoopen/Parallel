@@ -93,7 +93,8 @@ void slave(){
     int myCount = 0;
     MPI_Irecv(&mytask,3,MPI_DOUBLE,0,TASK_TAG,MPI_COMM_WORLD,&request);
     MPI_Wait(&request,&status);
-    printf("node %d Received task.\n",myrank);
+    int source = status.MPI_SOURCE;
+    printf("node %d Received task from node %d.\n",myrank,source);
     printf("Task detail:\n");
     printf("real_upper: %lf\n",mytask[0]);
     printf("real_lower: %lf\n",mytask[1]);
