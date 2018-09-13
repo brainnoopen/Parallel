@@ -81,7 +81,7 @@ void master()
         taskCount--;
         totalCount+=tempCount;
     }while(taskCount > 0);
-    printf("totalCount: %d\n", totalCount);
+    printf("%d\n", totalCount);
 
 }
 
