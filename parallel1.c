@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "mpi.h"
@@ -44,11 +43,11 @@ void master()
     printf("There are %d nodes.\n",worldsize);
     printf("taskCount: %d\n",taskCount);
     //task[0]: real_low [1]: real_up [2]: num (real)
-    double task[3];
     double current_position = real_lower;
     int taskSize = num / taskCount;
     printf("Task size = %d\n",taskSize);
     for (int rank = 1; rank < worldsize; rank++){
+        double task[3];
         MPI_Request request;
         MPI_Status status;
         //last node
@@ -66,6 +65,7 @@ void master()
         }
         printf("(%lf, %lf),num = %d\n", task[0],task[1],(int)task[2]);
         MPI_Isend(&task,3,MPI_DOUBLE,rank,TASK_TAG,MPI_COMM_WORLD,&request);
+        MPI_Request_free(&request);
     }
 
     do{
@@ -108,7 +108,6 @@ void slave(){
 int inset(double real, double img, int maxiter){
 	double z_real = real;
 	double z_img = img;
-    #pragma omp parallel for
 	for(int iters = 0; iters < maxiter; iters++){
 		double z2_real = z_real*z_real-z_img*z_img;
 		double z2_img = 2.0*z_real*z_img;
