@@ -42,11 +42,10 @@ void master()
     //task[0]: real_low [1]: real_up [2]: num (real)
     double current_position = real_lower;
     //if the number of total tasks is larger than num
-    int taskSize = 0;
     if(num < taskCount)
-        taskSize = num;
-    else
-        taskSize = num / taskCount;
+        taskCount = worldsize;
+        
+    int taskSize = num / taskCount;
     double task[3];
     if(DEBUG)
         printf("Task size = %d\n",taskSize);
@@ -207,7 +206,6 @@ int main(int argc, char *argv[]){
     MPI_Init(NULL,NULL);
     MPI_Comm_size(MPI_COMM_WORLD,&worldsize);
     MPI_Comm_rank(MPI_COMM_WORLD,&myrank);
-    TASK_FACTOR = worldsize;//assign the factor according to the worldsize
     if(DEBUG){
         char hostname[256];
         gethostname(hostname,sizeof(hostname));
