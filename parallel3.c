@@ -48,17 +48,18 @@ void master()
     double task[3];
     if(DEBUG)
         printf("Task size = %d\n",taskSize);
-    for (int taskNum = 1; taskNum < taskCount; taskNum++){
+    
+    //initial distribution
+    for (int rank = 1; rank < worldsize; rank++){
         MPI_Request request;
         MPI_Status status;
-        //make sure factor is not 1!
         task[0] = current_position;
         current_position += taskSize * real_step;
         task[1] = current_position;
         task[2] = (double)taskSize;
         if(DEBUG)
             printf("(%lf, %lf),num = %d\n", task[0],task[1],(int)task[2]);
-        MPI_Isend(&task,3,MPI_DOUBLE,taskNum%(worldsize),TASK_TAG,MPI_COMM_WORLD,&request);
+        MPI_Isend(&task,3,MPI_DOUBLE,rank,TASK_TAG,MPI_COMM_WORLD,&request);
         MPI_Wait(&request,&status);
         pending--;
     }
