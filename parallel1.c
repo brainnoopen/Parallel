@@ -34,13 +34,16 @@ void master()
         printf("There is only one node. Cannot implement master-slave. Exit.\n");
         exit(-1);
     }
-    printf("I am the master node!\n");
-    printf("There are %d nodes.\n",worldsize);
-    printf("taskCount: %d\n",taskCount);
+    if(DEBUG){
+        printf("I am the master node!\n");
+        printf("There are %d nodes.\n",worldsize);
+        printf("taskCount: %d\n",taskCount);
+    }
     //task[0]: real_low [1]: real_up [2]: num (real)
     double current_position = real_lower;
     int taskSize = num / taskCount;
-    printf("Task size = %d\n",taskSize);
+    if(DEBUG)
+        printf("Task size = %d\n",taskSize);
     for (int rank = 1; rank < worldsize; rank++){
         double task[3];
         MPI_Request request;
@@ -58,7 +61,8 @@ void master()
             task[2] = (double)taskSize;
             
         }
-        printf("(%lf, %lf),num = %d\n", task[0],task[1],(int)task[2]);
+        if(DEBUG)
+            printf("(%lf, %lf),num = %d\n", task[0],task[1],(int)task[2]);
         MPI_Isend(&task,3,MPI_DOUBLE,rank,TASK_TAG,MPI_COMM_WORLD,&request);
         MPI_Wait(&request,&status);
     }
@@ -98,7 +102,8 @@ void slave(){
         printf("real_num: %d\n",(int)mytask[2]);
     }
     myCount = mandelbrotSetCount(mytask[0],mytask[1],img_lower,img_upper,(int)mytask[2],num,maxiter);
-    printf("myCount: %d\n",myCount);
+    if(DEBUG)
+        printf("myCount: %d\n",myCount);
     MPI_Isend(&myCount,1,MPI_INT,0,ANSWER_TAG,MPI_COMM_WORLD,&request);
     MPI_Wait(&request,&status);
 }
@@ -119,7 +124,8 @@ int inset(double real, double img, int maxiter){
 
 // count the number of points in the set, within the region
 int mandelbrotSetCount(double real_lower, double real_upper, double img_lower, double img_upper, int real_num, int img_num, int maxiter){
-	printf("%lf,%lf,%lf,%lf,%d,%d,%d",real_lower,real_upper,img_lower,img_upper,real_num,img_num,maxiter);
+	if(DEBUG)
+        printf("%lf,%lf,%lf,%lf,%d,%d,%d",real_lower,real_upper,img_lower,img_upper,real_num,img_num,maxiter);
     int count=0;
 	for(int real=0; real<real_num; real++){
 		for(int img=0; img<img_num; img++){
@@ -147,9 +153,11 @@ int main(int argc, char *argv[]){
     MPI_Init(NULL,NULL);
     MPI_Comm_size(MPI_COMM_WORLD,&worldsize);
     MPI_Comm_rank(MPI_COMM_WORLD,&myrank);
-    char hostname[256];
-    gethostname(hostname,sizeof(hostname));
-    printf("Hello from node: %d, hostname = %s, pid = %d\n",myrank,hostname,getpid());
+    if(DEBUG){
+        char hostname[256];
+        gethostname(hostname,sizeof(hostname));
+        printf("Hello from node: %d, hostname = %s, pid = %d\n",myrank,hostname,getpid());
+    }
     if(myrank == 0) master();
     else slave();
     MPI_Finalize();
