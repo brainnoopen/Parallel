@@ -100,6 +100,7 @@ void slave(){
     myCount = mandelbrotSetCount(mytask[0],mytask[1],img_lower,img_upper,(int)mytask[2],num,maxiter);
     printf("myCount: %d\n",myCount);
     MPI_Isend(&myCount,1,MPI_INT,0,ANSWER_TAG,MPI_COMM_WORLD,&request);
+    MPI_Wait(&request,&status);
 }
 
 // return 1 if in set, 0 otherwise
