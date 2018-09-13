@@ -41,7 +41,12 @@ void master()
     }
     //task[0]: real_low [1]: real_up [2]: num (real)
     double current_position = real_lower;
-    int taskSize = num / taskCount;
+    //if the number of total tasks is larger than num
+    int taskSize = 0;
+    if(num < taskCount)
+        taskSize = num;
+    else
+        taskSize = num / taskCount;
     double task[3];
     if(DEBUG)
         printf("Task size = %d\n",taskSize);
