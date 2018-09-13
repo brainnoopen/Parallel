@@ -1,7 +1,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <omp.h>
 #include "mpi.h"
 
 #define TASK_FACTOR 1 //indicate the portion of tasks that are not assign in the first place
