@@ -61,7 +61,6 @@ void master()
         printf("(%lf, %lf),num = %d\n", task[0],task[1],(int)task[2]);
         MPI_Isend(&task,3,MPI_DOUBLE,rank,TASK_TAG,MPI_COMM_WORLD,&request);
         MPI_Wait(&request,&status);
-        MPI_Request_free(&request);
     }
 
     do{
