@@ -40,8 +40,6 @@ void master()
         printf("There is only one node. Cannot implement master-slave. Exit.\n");
         exit(-1);
     }
-    MPI_Request request;
-    MPI_Status status;
     printf("I am the master node!\n");
     printf("There are %d nodes.\n",worldsize);
     printf("taskCount: %d\n",taskCount);
@@ -51,6 +49,8 @@ void master()
     int taskSize = num / taskCount;
     printf("Task size = %d\n",taskSize);
     for (int rank = 1; rank < worldsize; rank++){
+        MPI_Request request;
+        MPI_Status status;
         //last node
         if(rank == worldsize-1){
             task[0] = current_position;
@@ -69,6 +69,8 @@ void master()
     }
 
     do{
+        MPI_Request request;
+        MPI_Status status;
         //receive answer from slave
         int tempCount = 0;
         //buf,count,datatype,source,tag,comm,request
