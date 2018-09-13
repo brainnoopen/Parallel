@@ -6,7 +6,7 @@
 #define TASK_FACTOR 1 //indicate the portion of tasks that are not assign in the first place
 #define TASK_TAG 101
 #define ANSWER_TAG 102
-
+#define DEBUG 0
 //Global variables
 int worldsize; //number of nodes
 int myrank; //rank of this node
@@ -60,6 +60,7 @@ void master()
         }
         printf("(%lf, %lf),num = %d\n", task[0],task[1],(int)task[2]);
         MPI_Isend(&task,3,MPI_DOUBLE,rank,TASK_TAG,MPI_COMM_WORLD,&request);
+        MPI_Wait(&request,&status);
         MPI_Request_free(&request);
     }
 
@@ -82,6 +83,7 @@ void master()
 
 //slave nodes
 void slave(){
+    printf("Hello from slave node: %d\n",myrank);
     MPI_Request request;
     MPI_Status status;
     double mytask[3];
@@ -89,11 +91,13 @@ void slave(){
     MPI_Irecv(&mytask,3,MPI_DOUBLE,0,TASK_TAG,MPI_COMM_WORLD,&request);
     MPI_Wait(&request,&status);
     int source = status.MPI_SOURCE;
-    printf("node %d Received task from node %d.\n",myrank,source);
-    printf("Task detail:\n");
-    printf("real_upper: %lf\n",mytask[0]);
-    printf("real_lower: %lf\n",mytask[1]);
-    printf("real_num: %d\n",(int)mytask[2]);
+    if(DEBUG){
+        printf("node %d Received task from node %d.\n",myrank,source);
+        printf("Task detail:\n");
+        printf("real_upper: %lf\n",mytask[0]);
+        printf("real_lower: %lf\n",mytask[1]);
+        printf("real_num: %d\n",(int)mytask[2]);
+    }
     myCount = mandelbrotSetCount(mytask[0],mytask[1],img_lower,img_upper,(int)mytask[2],num,maxiter);
     printf("myCount: %d\n",myCount);
     MPI_Isend(&myCount,1,MPI_INT,0,ANSWER_TAG,MPI_COMM_WORLD,&request);
