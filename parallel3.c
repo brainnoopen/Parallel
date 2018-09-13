@@ -3,7 +3,6 @@
 #include <unistd.h>
 #include "mpi.h"
 #include <omp.h>
-#define TASK_FACTOR 2 //indicate the portion of tasks that are not assign in the first place
 #define TASK_TAG 101
 #define FINISH_TAG 103 //indicate that there are no more task
 #define ANSWER_TAG 102
@@ -11,6 +10,7 @@
 //Global variables
 int worldsize; //number of nodes
 int myrank; //rank of this node
+int TASK_FACTOR;
 double real_lower;
 double real_upper;
 double img_lower;
@@ -20,9 +20,6 @@ double img_step;
 int num; //number of points to calculate
 int maxiter; //maximum number of iteration for one number
 int mandelbrotSetCount(double real_lower, double real_upper, double img_lower, double img_upper, int real_num, int img_num, int maxiter);
-int init(){
-    return 0;
-}
 
 //the master node will read the input and distribute to nodes
 void master()
@@ -205,6 +202,7 @@ int main(int argc, char *argv[]){
     MPI_Init(NULL,NULL);
     MPI_Comm_size(MPI_COMM_WORLD,&worldsize);
     MPI_Comm_rank(MPI_COMM_WORLD,&myrank);
+    TASK_FACTOR = worldsize;//assign the factor according to the worldsize
     if(DEBUG){
         char hostname[256];
         gethostname(hostname,sizeof(hostname));
