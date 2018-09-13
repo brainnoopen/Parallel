@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "mpi.h"
 
 #define TASK_FACTOR 1 //indicate the portion of tasks that are not assign in the first place
@@ -24,7 +25,9 @@ int init(){
     MPI_Init(NULL,NULL);
     MPI_Comm_size(MPI_COMM_WORLD,&worldsize);
     MPI_Comm_rank(MPI_COMM_WORLD,&myrank);
-    printf("Hello from node: %d\n",myrank);
+    char hostname[256];
+    gethostname(hostname,sizeof(hostname));
+    printf("Hello from node: %d, hostname = %s, pid = %d\n",myrank,hostname,getpid());
     return 0;
 }
 
