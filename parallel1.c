@@ -20,14 +20,6 @@ int num; //number of points to calculate
 int maxiter; //maximum number of iteration for one number
 int mandelbrotSetCount(double real_lower, double real_upper, double img_lower, double img_upper, int real_num, int img_num, int maxiter);
 int init(){
-	real_step = (real_upper-real_lower)/num;
-	img_step = (img_upper-img_lower)/num;
-    MPI_Init(NULL,NULL);
-    MPI_Comm_size(MPI_COMM_WORLD,&worldsize);
-    MPI_Comm_rank(MPI_COMM_WORLD,&myrank);
-    char hostname[256];
-    gethostname(hostname,sizeof(hostname));
-    printf("Hello from node: %d, hostname = %s, pid = %d\n",myrank,hostname,getpid());
     return 0;
 }
 
@@ -145,7 +137,15 @@ int main(int argc, char *argv[]){
 		sscanf(argv[region*6+5],"%i",&num);
 		sscanf(argv[region*6+6],"%i",&maxiter);
     }
-	init();
+	//init();
+	real_step = (real_upper-real_lower)/num;
+	img_step = (img_upper-img_lower)/num;
+    MPI_Init(NULL,NULL);
+    MPI_Comm_size(MPI_COMM_WORLD,&worldsize);
+    MPI_Comm_rank(MPI_COMM_WORLD,&myrank);
+    char hostname[256];
+    gethostname(hostname,sizeof(hostname));
+    printf("Hello from node: %d, hostname = %s, pid = %d\n",myrank,hostname,getpid());
     if(myrank == 0) master();
     else slave();
     MPI_Finalize();
