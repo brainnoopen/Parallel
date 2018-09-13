@@ -6,4 +6,5 @@
 #SBATCH --partition=cloud
 
 module load OpenMPI/3.1.0-GCC-8.1.0
+mpicc parallel2.c -o parallel2
 mpiexec ./parallel2 -2.0 1.0 -1.0 1.0 1000 10000
