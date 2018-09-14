@@ -43,8 +43,8 @@ void master()
     //task[0]: real_low [1]: real_up [2]: num (real)
     double current_position = real_lower;
     //if the number of total tasks is larger than num
-    if(num < taskCount)
-        taskCount = num;
+    if(num < taskCount) //default 
+        taskCount = (worldsize-1) * 16;
         
     int taskSize = num / taskCount;
     double task[3];
