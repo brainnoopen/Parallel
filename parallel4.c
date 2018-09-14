@@ -213,7 +213,7 @@ int main(int argc, char *argv[]){
     TASK_FACTOR = worldsize;
     //if the input is dense and the number of nodes in the comm_world cannot "satisfy" the need
     //sqrt of num is just a random assumption
-    if((worldsize-1)*TASK_FACTOR < sqrt(num)){
+    if((worldsize-1)*TASK_FACTOR < log2(num)){
         if(myrank == 0) master();
         else slave();
         MPI_Finalize();
