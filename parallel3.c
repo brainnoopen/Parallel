@@ -26,6 +26,7 @@ void master()
 {
     //divide the task according to number of nodes
     //the master node is excluded 
+    int TASK_FACTOR = worldsize;
     int totalCount = 0; //total inset number
     int taskCount = (worldsize-1) * TASK_FACTOR; //total number of tasks
     int pending = taskCount;//number of pending task (need to be distributed)
@@ -43,7 +44,7 @@ void master()
     double current_position = real_lower;
     //if the number of total tasks is larger than num
     if(num < taskCount)
-        taskCount = worldsize;
+        taskCount = num;
         
     int taskSize = num / taskCount;
     double task[3];
