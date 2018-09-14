@@ -7,7 +7,7 @@
 #define TASK_TAG 101
 #define FINISH_TAG 103 //indicate that there are no more task
 #define ANSWER_TAG 102
-#define DEBUG 1
+#define DEBUG 0
 //Global variables
 int worldsize; //number of nodes
 int myrank; //rank of this node
